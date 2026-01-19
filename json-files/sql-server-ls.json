@@ -4,12 +4,12 @@
     "properties": {
         "type": "SqlServer",
         "typeproperties": {
-            "server": "DESKTOP-JGDG230",
+            "server": "<your-server>",
             "database": "test",
             "encrypt": "optional",
             "trustServerCertificate": false,
             "authenticationtype": "SQL",
-            "username": "jcrh",
+            "username": "user",
             "password": {
                 "type": "AzureKeyVaultSecret",
                 "store": {
@@ -24,4 +24,5 @@
             "type": "IntegrationRuntimeReference"
         }
     }
+
 }
