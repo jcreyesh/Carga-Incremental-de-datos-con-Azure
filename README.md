@@ -3,3 +3,5 @@ desde una base de datos en Sql-Server. El objetivo es comprender a detalle los p
 así como realizar dos corridas del pipeline: 1 considerando los datos iniciales y una segunda al añadir datos a la fuente original. El pipeline a desarrollar, el cual consiste 
 de dos actividades Lookup para obtener la última y la nueva fecha de actualización, para la carga del delta de datos(datos nuevos no incluidos en la tabla objetivo o target) y 
 un stored procedure para actualizar el nuevo valor de la última fecha de actualización.
+
+<img width="2969" height="1991" alt="Figura-0" src="https://github.com/user-attachments/assets/687495a9-6a1a-466b-9ad5-77201f5dfb2a" />
