@@ -1,0 +1,14 @@
+{
+    "name": "SourceDataset",
+    "properties": {
+        "type": "SqlServerTable",
+        "typeproperties": {
+            "schema": "dbo",
+            "tableName": "data_source_table"
+        },
+        "linkedServiceName": {
+            "referenceName": "AzureSQLServerLinkedService",
+            "type": "LinkedServiceReference"
+        }
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "name": "AzureSQLServerLinkedService",
+    "type": "Microsoft.DataFactory/factories/linkedservices",
+    "properties": {
+        "type": "SqlServer",
+        "typeproperties": {
+            "server": "DESKTOP-JGDG230",
+            "database": "test",
+            "encrypt": "optional",
+            "trustServerCertificate": false,
+            "authenticationtype": "SQL",
+            "username": "jcrh",
+            "password": {
+                "type": "AzureKeyVaultSecret",
+                "store": {
+                    "referenceName": "AzureKeyVault1",
+                    "type": "LinkedServiceReference" 
+                },
+                "secretName": "pass"
+            }
+        },
+        "connectVia": {
+            "referenceName": "IntegrationRuntime",
+            "type": "IntegrationRuntimeReference"
+        }
+    }
+}

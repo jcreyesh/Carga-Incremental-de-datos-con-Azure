@@ -1,0 +1,17 @@
+{
+    "name": "SinkDataset",
+    "properties": {
+        "type": "AzureBlob",
+        "typeproperties": {
+            "folderPath": "test/incrementalcopy",
+            "fileName": "@CONCAT('Incremental-', pipeline().RunId, '.txt')",
+            "format": {
+                "type": "TextFormat"
+            }
+        },
+        "linkedServiceName": {
+            "referenceName": "AzureStorageLinkedService",
+            "type": "LinkedServiceReference"
+        }
+    }
+}

@@ -1,0 +1,100 @@
+{
+    "name": "IncrementalCopyPipeline",
+    "properties": {
+        "activities": [
+            {
+                "name": "LookupOldWaterMarkActivity",
+                "type": "Lookup",
+                "typeProperties": {
+                    "source": {
+                        "type": "SqlSource",
+                        "sqlReaderQuery": "select * from watermarktable"
+                    },
+
+                    "dataset": {
+                        "referenceName": "WaterMarkDataset",
+                        "type" : "DatasetReference"
+                    }
+                }
+            },
+            {
+                "name": "LookupNewWaterMarkActivity",
+                "type": "Lookup",
+                "typeProperties": {
+                    "source": {
+                        "type": "SqlSource",
+                        "sqlReaderQuery": "select MAX(LastModifyTime) as NewWatermarkValue from data_source_table"
+                    },
+                    "dataset": {
+                        "referenceName": "SourceDataset",
+                        "type": "DatasetReference"
+                    }
+                }
+            },
+            {
+                "name": "IncrementalCopyActivity",
+                "type": "Copy",
+                "typeProperties": {
+                    "source": {
+                        "type": "Sqlsource",
+                        "sqlReaderQuery": "select * from data_source_table where LastModifytime > '@{activity('LookupOldWaterMarkActivity').output.firstRow.WatermarkValue}' and LastModifytime <= '@{activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkValue}'"
+                    },
+                    "sink": {
+                        "type": "BlobSink"
+                    }
+                },
+                "dependsOn": [
+                    {
+                        "activity": "LookupNewWaterMarkActivity",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    },
+                    {
+                        "activity": "LookupOldWaterMarkActivity",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "inputs": [
+                    {
+                        "referenceName": "SourceDataset",
+                        "type": "DatasetReference"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "referenceName": "SinkDataset",
+                        "type": "DatasetReference"
+                    }
+                ]
+            },
+            {
+                "name": "StoreProceduretoWriteWaterMarkActivity",
+                "type": "SqlServerStoredProcedure",
+                "typeProperties": {
+                    "storedProcedureName": "usp_write_watermark",
+                    "storedProcedureParameters": {
+                        "LastModifiedtime": {"value": "@activity('LookupNewWaterMarkActivity').output.firstRow.NewWatermarkValue", "type": "datetime"},
+                        "TableName": {"value": "@activity('LookupOldWaterMarkActivity').output.FirstRow.TableName", "type": "String"}                    
+                    }
+                },
+                "linkedServiceName": {
+                    "referenceName": "AzureSQLServerLinkedService",
+                    "type": "LinkedServiceReference"
+                },
+                
+                "dependsOn": [
+                    {
+                        "activity": "IncrementalCopyActivity",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ]
+            }
+        ]
+
+    }
+}
